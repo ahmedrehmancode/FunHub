@@ -1,18 +1,30 @@
+using Api.Extensions;
 using Application;
+using CEIS.Api.Extensions;
+using CEIS.Api.Middleware;
 using Infrastructure;
+using Infrastructure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddApplicationServices()
-    .AddInfrastructureServices(builder.Configuration);
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    .AddIdentityServices()
+    .AddApiServices()
+    .AddInfrastructureServices(builder.Configuration)
+    .AddJwtAuthentication(builder.Configuration);
 
 var app = builder.Build();
+
+// Identity Role Add
+using (var scope = app.Services.CreateScope())
+{
+    await RoleSeeder.SeedRolesAsync(scope.ServiceProvider);
+}
+
+app.UseStaticFiles();
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseCors("AllowReact");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -23,6 +35,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

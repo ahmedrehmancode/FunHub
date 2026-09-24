@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Interface.Repositories
+namespace Domain.Enum
 {
-    public class IGenricRepositoy<T> where T : class
+    public enum IdentityGenderEnum
     {
+        Male,
+        Female,
+        other
     }
 }

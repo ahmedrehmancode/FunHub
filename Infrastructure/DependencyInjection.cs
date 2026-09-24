@@ -1,12 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Application.Interface;
+using Application.Interface.Servies;
+using Infrastructure.Data;
+using Infrastructure.Service;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Application.Interface;
-using Infrastructure.Data;
 
 namespace Infrastructure
 {
@@ -16,7 +20,16 @@ namespace Infrastructure
             (this IServiceCollection services,
             IConfiguration configuration)
         {
+            // Databse Configuration
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+            // UnitOfWork Register
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // Service Register
+            services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
             return services;
         }
