@@ -1,5 +1,5 @@
 ﻿using Application.Interface;
-using CEIS.Application.Common.Models;
+using Application.Common.Models;
 using FluentValidation;
 using MediatR;
 using System;

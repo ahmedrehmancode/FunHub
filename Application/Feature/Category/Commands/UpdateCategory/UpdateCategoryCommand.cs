@@ -1,4 +1,4 @@
-﻿using CEIS.Application.Common.Models;
+﻿using Application.Common.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;

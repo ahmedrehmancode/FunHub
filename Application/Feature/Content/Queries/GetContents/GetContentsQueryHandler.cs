@@ -1,6 +1,5 @@
 ﻿using Application.Common.Models;
 using Application.Interface;
-using CEIS.Application.Common.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;

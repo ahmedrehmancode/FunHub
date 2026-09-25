@@ -1,6 +1,6 @@
 ﻿using Application.Interface;
-using CEIS.Application.Common.Models;
-using CEIS.Domain.Exceptions;
+using Application.Common.Models;
+using Domain.Exceptions;
 using MediatR;
 using System;
 using System.Collections.Generic;

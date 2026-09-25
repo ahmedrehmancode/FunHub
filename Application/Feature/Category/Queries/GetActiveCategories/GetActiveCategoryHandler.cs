@@ -1,5 +1,5 @@
-﻿using Application.Interface;
-using CEIS.Application.Common.Models;
+﻿using Application.Common.Models;
+using Application.Interface;
 using Domain.Entity;
 using MediatR;
 using System;

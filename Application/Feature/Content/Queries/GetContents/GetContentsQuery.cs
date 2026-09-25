@@ -1,5 +1,4 @@
 ﻿using Application.Common.Models;
-using CEIS.Application.Common.Models;
 using Domain.Enum;
 using MediatR;
 using System;
