@@ -30,6 +30,7 @@ namespace Infrastructure
             // Service Register
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<IEmailService, EmailService>();
 
             return services;
         }

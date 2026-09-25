@@ -1,4 +1,4 @@
-﻿using CEIS.Application.Common.Models;
+﻿using Application.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +19,8 @@ namespace Application.Interface.Servies
             );
 
         Task<AuthResult> LoginAsync(string emailOrUsername, string Password);
+
+        // Application/Interface/Servies/IIdentityService.cs
+        Task<AuthResult> VerifyEmail(string token, string email);
     }
 }

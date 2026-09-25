@@ -1,10 +1,9 @@
 ﻿using Application.Common;
-using CEIS.Application.Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace CEIS.Api.Extensions
+namespace Api.Extensions
 {
     public static class AuthenticationServiceExtensions
     {
