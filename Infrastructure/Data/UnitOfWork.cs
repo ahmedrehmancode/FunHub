@@ -1,4 +1,5 @@
 ﻿using Application.Interface;
+using Application.Interface.Repositories;
 using Infrastructure.Identity;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,18 @@ namespace Infrastructure.Data
 {
     public class UnitOfWork : IUnitOfWork
     {
+        public ICategoryRepository CategoryRepository { get; }
+        public IContentRepository ContentRepository { get; }
+        
+
         private readonly ApplicationDbContext _context;
-        public UnitOfWork(ApplicationDbContext context)
+        public UnitOfWork(ApplicationDbContext context,
+            ICategoryRepository categoryRepository,
+            IContentRepository contentRepository)
         {
             _context = context;
+            CategoryRepository = categoryRepository;
+            ContentRepository = contentRepository;
         }
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

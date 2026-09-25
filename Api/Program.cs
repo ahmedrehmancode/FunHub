@@ -2,7 +2,9 @@ using Api.Extensions;
 using Application;
 using Api.Middleware;
 using Infrastructure;
+using Infrastructure.Data;
 using Infrastructure.Identity;
+using Infrastructure.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +20,11 @@ var app = builder.Build();
 // Identity Role Add
 using (var scope = app.Services.CreateScope())
 {
+    var context = scope.ServiceProvider
+        .GetRequiredService<ApplicationDbContext>();
+
     await RoleSeeder.SeedRolesAsync(scope.ServiceProvider);
+    await CategorySeeder.SeedAsync(context);
 }
 
 app.UseStaticFiles();
