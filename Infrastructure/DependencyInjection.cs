@@ -1,6 +1,8 @@
 ﻿using Application.Interface;
+using Application.Interface.Repositories;
 using Application.Interface.Servies;
 using Infrastructure.Data;
+using Infrastructure.Data.Repositories;
 using Infrastructure.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +32,10 @@ namespace Infrastructure
             // Service Register
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<IContentRepository, ContentRepository>();
+
+            // Repositries
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             return services;
         }

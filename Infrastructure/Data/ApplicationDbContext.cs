@@ -1,4 +1,5 @@
-﻿using Infrastructure.Identity;
+﻿using Domain.Entity;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,6 +16,8 @@ namespace Infrastructure.Data
             (DbContextOptions<ApplicationDbContext> opt) : base(opt) { }
 
         // Tables
+        public DbSet<Category> Categorys { get; set; }
+        public DbSet<Content> Contents { get; set; }
 
 
         // All Configuration Regsiter
