@@ -36,6 +36,7 @@ namespace Infrastructure
 
             // Repositries
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IEmailService, EmailService>();
 
             return services;
         }

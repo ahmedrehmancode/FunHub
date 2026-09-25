@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CEIS.Application.Common.Models
+namespace Application.Common.Models
 {
     public class AuthResult
     {

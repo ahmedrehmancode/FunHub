@@ -1,7 +1,6 @@
 using Api.Extensions;
 using Application;
-using CEIS.Api.Extensions;
-using CEIS.Api.Middleware;
+using Api.Middleware;
 using Infrastructure;
 using Infrastructure.Data;
 using Infrastructure.Identity;
@@ -10,7 +9,7 @@ using Infrastructure.Service;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddApplicationServices()
+builder.Services.AddApplicationServices(builder.Configuration)
     .AddIdentityServices()
     .AddApiServices()
     .AddInfrastructureServices(builder.Configuration)

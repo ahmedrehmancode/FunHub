@@ -1,9 +1,8 @@
 ﻿using Application.Common;
-using CEIS.Application.Common;
-using CEIS.Domain.Exceptions;
+using Domain.Exceptions;
 using System.Text.Json;
 
-namespace CEIS.Api.Middleware
+namespace Api.Middleware
 {
     public class ExceptionMiddleware
     {

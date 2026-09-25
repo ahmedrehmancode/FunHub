@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace CEIS.Application.Common.Models
+namespace Application.Common.Models
 {
     public class Result<T>
     {
