@@ -26,7 +26,6 @@ namespace Application.Feature.Auth.Commands.Register
         {
             var result = await _identityService.RegisterAsync(
                 request.FullName,
-                request.UserName,
                 request.Email,
                 request.Password,
                 request.Gender,

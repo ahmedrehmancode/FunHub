@@ -72,7 +72,7 @@ namespace Infrastructure.Service
 
         // RegisterAsync method to create a new user account
 
-        public async Task<AuthResult> RegisterAsync(string fullName, string userName, string email, string password, Domain.Enum.IdentityGenderEnum Gender, string role)
+        public async Task<AuthResult> RegisterAsync(string fullName, string email, string password, Domain.Enum.IdentityGenderEnum Gender, string role)
         {
             var existingUserEmail = await _userManager.FindByEmailAsync(email);
             if (existingUserEmail != null)
@@ -84,21 +84,11 @@ namespace Infrastructure.Service
                 };
             }
 
-            var existingUser = await _userManager.FindByNameAsync(userName);
-            if (existingUser != null)
-            {
-                return new AuthResult
-                {
-                    Succeeded = false,
-                    Errors = new List<string> { "This username is already taken." }
-                };
-            }
-
             var user = new ApplicationUser
             {
                 FullName = fullName,
                 Email = email,
-                UserName = userName,
+                UserName = email,
                 Gender = Gender,
                 CreatedAt = DateTime.UtcNow
             };
@@ -116,12 +106,7 @@ namespace Infrastructure.Service
 
             await _userManager.AddToRoleAsync(user, role);
 
-            //return new AuthResult
-            //{
-            //    Succeeded = true,
-            //};
-
-            // ---- Ye naya hissa hai ----
+            
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             _logger.LogInformation("IdentityService : generated email confirmation token for {Email}", user.Email);
             var baseUrl = _configruation["AppSettings:BaseUrl"];
@@ -155,19 +140,15 @@ namespace Infrastructure.Service
             }
             catch (AppException)
             {
-                // user ban chuka hai, sirf email fail hui
+                
                 return new AuthResult
                 {
                     Succeeded = true,
                     Errors = new() { "Account created but verification email could not be sent." }
                 };
             }
-            // ---- naya hissa khatam ----
+            
         }
-
-
-
-        // confirm Email address
 
         public async Task<AuthResult> VerifyEmail(string token, string email)
         {

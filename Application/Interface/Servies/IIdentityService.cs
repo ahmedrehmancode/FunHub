@@ -11,7 +11,6 @@ namespace Application.Interface.Servies
     {
         Task<AuthResult> RegisterAsync(
             string fullName,
-            string userName,
             string email,
             string password,
             Domain.Enum.IdentityGenderEnum Gender,
