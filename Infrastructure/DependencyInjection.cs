@@ -32,11 +32,18 @@ namespace Infrastructure
             // Service Register
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-            services.AddScoped<IContentRepository, ContentRepository>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
+
+            // Configure
+            services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
 
             // Repositries
             services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IContentRepository, ContentRepository>();
+            services.AddScoped<IBookmarkRepository, BookmarkRepository>();
+            services.AddScoped<IMerchandiseRepository, MerchandiseRepository>();
+            services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
             return services;
         }

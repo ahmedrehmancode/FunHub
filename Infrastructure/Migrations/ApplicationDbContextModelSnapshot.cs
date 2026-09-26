@@ -22,6 +22,37 @@ namespace Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Domain.Entity.Bookmark", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ContentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContentId");
+
+                    b.HasIndex("UserId", "ContentId")
+                        .IsUnique();
+
+                    b.ToTable("Bookmarks");
+                });
+
             modelBuilder.Entity("Domain.Entity.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -79,31 +110,24 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(10000)
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Genre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsFeatured")
-                        .HasColumnType("bit");
-
                     b.Property<string>("MediaUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<double>("PopularityScore")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("float")
                         .HasDefaultValue(0.0);
 
-                    b.Property<DateTime?>("ReleaseDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly?>("ReleaseDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("ThumbnailUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -345,6 +369,17 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entity.Bookmark", b =>
+                {
+                    b.HasOne("Domain.Entity.Content", "Content")
+                        .WithMany("Bookmarks")
+                        .HasForeignKey("ContentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Content");
+                });
+
             modelBuilder.Entity("Domain.Entity.Content", b =>
                 {
                     b.HasOne("Domain.Entity.Category", "Category")
@@ -410,6 +445,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.Category", b =>
                 {
                     b.Navigation("Contents");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Content", b =>
+                {
+                    b.Navigation("Bookmarks");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,6 +11,9 @@ namespace Application.Interface
     {
         public ICategoryRepository CategoryRepository { get; }
         public IContentRepository ContentRepository { get; }
+        public IBookmarkRepository BookmarkRepository { get; }
+        public IMerchandiseRepository MerchandiseRepository { get; }
+        public IFeedbackRepository FeedbackRepository { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
