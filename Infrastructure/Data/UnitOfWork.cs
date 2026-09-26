@@ -13,16 +13,25 @@ namespace Infrastructure.Data
     {
         public ICategoryRepository CategoryRepository { get; }
         public IContentRepository ContentRepository { get; }
-        
+        public IBookmarkRepository BookmarkRepository { get; }
+        public IMerchandiseRepository MerchandiseRepository { get; }
+        public IFeedbackRepository FeedbackRepository { get; }
+
 
         private readonly ApplicationDbContext _context;
         public UnitOfWork(ApplicationDbContext context,
             ICategoryRepository categoryRepository,
-            IContentRepository contentRepository)
+            IContentRepository contentRepository,
+            IBookmarkRepository bookmarkRepository,
+            IMerchandiseRepository merchandiseRepository,
+            IFeedbackRepository feedbackRepository)
         {
             _context = context;
             CategoryRepository = categoryRepository;
             ContentRepository = contentRepository;
+            BookmarkRepository = bookmarkRepository;
+            MerchandiseRepository = merchandiseRepository;
+            FeedbackRepository = feedbackRepository;
         }
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

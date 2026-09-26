@@ -17,19 +17,15 @@ namespace Application.Feature.Content.Queries
 
         public ContentType Type { get; set; }
 
-        public string Genre { get; set; } = string.Empty;
+        public string? ThumbnailUrl { get; set; } = string.Empty;
 
-        public string ThumbnailUrl { get; set; } = string.Empty;
+        public string? MediaUrl { get; set; } = string.Empty;
 
-        public string MediaUrl { get; set; } = string.Empty;
-
-        public DateTime? ReleaseDate { get; set; }
+        public DateOnly? ReleaseDate { get; set; }
 
         public int ViewCount { get; set; }
 
         public double PopularityScore { get; set; }
-
-        public bool IsFeatured { get; set; }
 
         public int CategoryId { get; set; }
 

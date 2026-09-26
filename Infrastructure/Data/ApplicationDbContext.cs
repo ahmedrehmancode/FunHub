@@ -2,6 +2,7 @@
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,9 @@ namespace Infrastructure.Data
         // Tables
         public DbSet<Category> Categorys { get; set; }
         public DbSet<Content> Contents { get; set; }
+        public DbSet<Bookmark> Bookmarks { get; set; }
+        public DbSet<MerchandiseItem> MerchandiseItems { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
 
 
         // All Configuration Regsiter

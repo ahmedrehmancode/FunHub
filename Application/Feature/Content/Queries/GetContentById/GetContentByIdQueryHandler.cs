@@ -35,13 +35,11 @@ namespace Application.Feature.Content.Queries.GetContentById
                 Title = content.Title,
                 Description = content.Description,
                 Type = content.Type,
-                Genre = content.Genre,
                 ThumbnailUrl = content.ThumbnailUrl,
                 MediaUrl = content.MediaUrl,
                 ReleaseDate = content.ReleaseDate,
                 ViewCount = content.ViewCount,
                 PopularityScore = content.PopularityScore,
-                IsFeatured = content.IsFeatured,
                 CategoryId = content.CategoryId,
                 CategoryName = content.Category!.Name
             };

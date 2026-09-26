@@ -33,6 +33,14 @@ namespace Infrastructure.Data.Configurations
 
             builder.Property(c => c.PopularityScore)
                    .HasDefaultValue(0);
+
+            builder.Property(c => c.ThumbnailUrl)
+                .HasMaxLength(500)
+                .IsRequired(false);
+
+            builder.Property(c => c.MediaUrl)
+                   .HasMaxLength(500)
+                   .IsRequired(false);
         }
     }
 }
