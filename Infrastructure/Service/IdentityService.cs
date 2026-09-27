@@ -18,7 +18,7 @@ namespace Infrastructure.Service
         private readonly IEmailService _emailService;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<IdentityService> _logger;
-        public IdentityService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration iconfigruation,IEmailService emailService,ILogger<IdentityService> logger)
+        public IdentityService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration iconfigruation, IEmailService emailService, ILogger<IdentityService> logger)
         {
             _context = context;
             _userManager = userManager;
@@ -95,7 +95,7 @@ namespace Infrastructure.Service
 
             var result = await _userManager.CreateAsync(user, password);
 
-           
+
 
             if (!result.Succeeded)
                 return new AuthResult
@@ -105,6 +105,7 @@ namespace Infrastructure.Service
                 };
 
             await _userManager.AddToRoleAsync(user, role);
+
 
             
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -116,7 +117,7 @@ namespace Infrastructure.Service
             _logger.LogInformation("IdentityService : Verification link generated for {Email}: {Link}", user.Email, link);
             try
             {
-            _logger.LogInformation("IdentityService : User created successfully. Sendting email to EmailSender for {Email}", user.Email);
+                _logger.LogInformation("IdentityService : User created successfully. Sendting email to EmailSender for {Email}", user.Email);
                 var emailResult = await _emailService.SendVerificationEmailAsync(user.Email!, link);
                 if (!emailResult)
                 {
@@ -133,13 +134,14 @@ namespace Infrastructure.Service
                     return new AuthResult
                     {
                         Succeeded = true
-                       
+
                     };
-                }   
+                }
 
             }
             catch (AppException)
             {
+            
                 
                 return new AuthResult
                 {
@@ -147,6 +149,7 @@ namespace Infrastructure.Service
                     Errors = new() { "Account created but verification email could not be sent." }
                 };
             }
+           
             
         }
 
@@ -193,4 +196,26 @@ namespace Infrastructure.Service
                 Errors = result.Errors.Select(e => e.Description).ToList()
             };
         }
-    } }
+        // FindUserByEmailAsync method to retrieve a user's ID and email based on their email address
+        public async Task<(string? UserId, string? Email)> FindUserByEmailAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            return user == null ? (null, null) : (user.Id, user.Email);
+        }
+        // UpdatePasswordAsync method to update a user's password
+        public async Task<bool> UpdatePasswordAsync(string userId, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return false;
+
+            var hasher = new PasswordHasher<ApplicationUser>();
+            user.PasswordHash = hasher.HashPassword(user, newPassword);
+
+            var result = await _userManager.UpdateAsync(user);
+            return result.Succeeded;
+        }
+
+
+
+    }
+}

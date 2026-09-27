@@ -9,5 +9,6 @@ namespace Application.Interface.Servies
     public interface IEmailService
     {
         Task<bool> SendVerificationEmailAsync(string email, string verificationLink);
+        Task<bool> SendPasswordResetEmailAsync(string email, string resetLink);
     }
 }

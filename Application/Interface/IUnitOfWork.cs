@@ -15,6 +15,8 @@ namespace Application.Interface
         public IMerchandiseRepository MerchandiseRepository { get; }
         public IFeedbackRepository FeedbackRepository { get; }
 
+        public IPasswordResetTokenRepository PasswordResetTokenRepository { get; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

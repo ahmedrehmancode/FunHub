@@ -3,6 +3,7 @@ using Application.Interface.Repositories;
 using Application.Interface.Servies;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
+using Infrastructure.Repositoires;
 using Infrastructure.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,12 @@ namespace Infrastructure
             services.AddScoped<IBookmarkRepository, BookmarkRepository>();
             services.AddScoped<IMerchandiseRepository, MerchandiseRepository>();
             services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+
+            //
+
+            services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
+          
+
 
             return services;
         }

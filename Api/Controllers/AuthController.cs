@@ -1,6 +1,8 @@
 ﻿using Application.Common;
+using Application.Feature.Auth.Commands.ForgotPassword;
 using Application.Feature.Auth.Commands.Login;
 using Application.Feature.Auth.Commands.Register;
+using Application.Feature.Auth.Commands.ResetPassword;
 using Application.Feature.Auth.Commands.VerifyEmail;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -48,7 +50,31 @@ namespace Api.Controllers
         public async Task<IActionResult> VerifyEmail([FromQuery] string token, [FromQuery] string email)
         {
             var result = await _mediator.Send(new VerifyEmailCommand { Token = token, Email = email });
-            return result.IsSuccess ? Ok(result) : BadRequest(result.Errors);
+            // return result.IsSuccess ? Ok(result) : BadRequest(result.Errors);
+            if (result.IsSuccess)
+            {
+                return Redirect("https://fanhubplus.net/login");
+            }
+
+            return Redirect("https://fanhubplus.net/email-verification-failed");
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand command)
+        {
+            _logger.LogInformation("Sending forgot password request for email: {Email}", command.Email);
+            var result = await _mediator.Send(command);
+            return Ok(new { message = "If this email exists, a reset link has been sent." });
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
+        {
+            var result = await _mediator.Send(command);
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse<object>.ValidationResponse(result.Errors));
+
+            return Ok(ApiResponse<object>.SuccessResponse(result.Data));
         }
     }
 }

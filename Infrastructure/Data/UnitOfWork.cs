@@ -13,6 +13,8 @@ namespace Infrastructure.Data
     {
         public ICategoryRepository CategoryRepository { get; }
         public IContentRepository ContentRepository { get; }
+
+        public IPasswordResetTokenRepository PasswordResetTokenRepository { get; }
         public IBookmarkRepository BookmarkRepository { get; }
         public IMerchandiseRepository MerchandiseRepository { get; }
         public IFeedbackRepository FeedbackRepository { get; }
@@ -22,6 +24,7 @@ namespace Infrastructure.Data
         public UnitOfWork(ApplicationDbContext context,
             ICategoryRepository categoryRepository,
             IContentRepository contentRepository,
+            IPasswordResetTokenRepository passwordResetTokenRepository)
             IBookmarkRepository bookmarkRepository,
             IMerchandiseRepository merchandiseRepository,
             IFeedbackRepository feedbackRepository)
@@ -29,6 +32,7 @@ namespace Infrastructure.Data
             _context = context;
             CategoryRepository = categoryRepository;
             ContentRepository = contentRepository;
+            PasswordResetTokenRepository = passwordResetTokenRepository;
             BookmarkRepository = bookmarkRepository;
             MerchandiseRepository = merchandiseRepository;
             FeedbackRepository = feedbackRepository;

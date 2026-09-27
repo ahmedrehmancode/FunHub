@@ -23,6 +23,8 @@ namespace Infrastructure.Data
         public DbSet<MerchandiseItem> MerchandiseItems { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
 
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+
 
         // All Configuration Regsiter
         protected override void OnModelCreating(ModelBuilder modelBuilder)
