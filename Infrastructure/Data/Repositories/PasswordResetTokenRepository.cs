@@ -1,5 +1,4 @@
-﻿using Application.Interface.Repositories;
-using Domain.Entity;
+﻿using Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Data;
 using System;
@@ -8,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Application.Interface.Repositories;
 
 namespace Infrastructure.Repositoires
 {
