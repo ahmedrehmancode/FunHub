@@ -10,7 +10,6 @@ namespace Application.Common.Models
     public class ContentFilterParams 
     {
         public int? CategoryId { get; set; }
-        public string Genre { get; set; } = string.Empty;
         public ContentType? Type { get; set; }
         public int? ReleaseYear { get; set; }
         public string SearchTerm { get; set; } = string.Empty;

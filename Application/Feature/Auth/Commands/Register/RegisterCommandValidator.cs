@@ -17,9 +17,6 @@ namespace Application.Feature.Auth.Commands.Register
             .MaximumLength(100)
             .WithMessage("Full name cannot exceed 100 characters.");
 
-            RuleFor(x => x.UserName)
-                .NotEmpty()
-                .WithMessage("Username is required.");
 
             RuleFor(x => x.Email)
                 .NotEmpty()

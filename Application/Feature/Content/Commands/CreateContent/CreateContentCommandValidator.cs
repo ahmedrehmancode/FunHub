@@ -1,7 +1,9 @@
-﻿using Application.Interface;
-using Application.Common.Models;
+﻿using Application.Common.Models;
+using Application.Interface;
+using Domain.Enum;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,12 @@ namespace Application.Feature.Content.Commands.CreateContent
 {
     public class CreateContentCommandValidator : AbstractValidator<CreateContentCommand>
     {
+        private static readonly string[] ImageExtensions = { ".jpg", ".jpeg", ".png", ".webp" };
+        private static readonly string[] VideoExtensions = { ".mp4", ".mov", ".webm" };
+        private static readonly string[] AudioExtensions = { ".mp3", ".wav" };
+        private const long MaxThumbnailBytes = 30 * 1024 * 1024;    // 30MB
+        private const long MaxMediaBytes = 500 * 1024 * 1024; // 500
+
         public CreateContentCommandValidator()
         {
             RuleFor(c => c.Title)
@@ -28,26 +36,8 @@ namespace Application.Feature.Content.Commands.CreateContent
                 .IsInEnum()
                 .WithMessage("Invalid content type.");
 
-            RuleFor(c => c.Genre)
-                .NotEmpty()
-                .WithMessage("Genre is required.")
-                .MaximumLength(100)
-                .WithMessage("Genre cannot exceed 100 characters.");
-
-            RuleFor(c => c.ThumbnailUrl)
-                .NotEmpty()
-                .WithMessage("Thumbnail URL is required.")
-                .MaximumLength(500)
-                .WithMessage("Thumbnail URL cannot exceed 500 characters.");
-
-            RuleFor(c => c.MediaUrl)
-                .NotEmpty()
-                .WithMessage("Media URL is required.")
-                .MaximumLength(500)
-                .WithMessage("Media URL cannot exceed 500 characters.");
-
             RuleFor(c => c.ReleaseDate)
-                .LessThanOrEqualTo(DateTime.UtcNow)
+                .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow))
                 .When(c => c.ReleaseDate.HasValue)
                 .WithMessage("Release date cannot be in the future.");
 
@@ -55,6 +45,45 @@ namespace Application.Feature.Content.Commands.CreateContent
                 .GreaterThan(0)
                 .WithMessage("A valid category is required.");
 
+            When(x => x.ThumbnailFile is not null, () =>
+            {
+                RuleFor(x => x.ThumbnailFile)
+                    .Must(HasExtension(ImageExtensions))
+                    .WithMessage("Thumbnail must be in jpg, jpeg, png, or webp format.")
+                    .Must(f => f!.Length <= MaxThumbnailBytes)
+                    .WithMessage("Thumbnail size must not exceed 30MB.");
+            });
+
+
+            When(x => x.MediaFile is not null && x.Type == ContentType.Video, () =>
+            {
+                RuleFor(x => x.MediaFile)
+                    .Must(HasExtension(VideoExtensions))
+                    .WithMessage("Video must be in mp4, mov, or webm format.")
+                    .Must(f => f!.Length <= MaxMediaBytes)
+                    .WithMessage("Video size must not exceed 500MB.");
+            });
+
+            When(x => x.MediaFile is not null && x.Type == ContentType.Audio, () =>
+            {
+                RuleFor(x => x.MediaFile)
+                    .Must(HasExtension(AudioExtensions))
+                    .WithMessage("Audio must be in mp3 or wav format.")
+                    .Must(f => f!.Length <= MaxMediaBytes)
+                    .WithMessage("Audio size must not exceed 100MB.");
+            });
+
+            When(x => x.MediaFile is not null && x.Type == ContentType.Image, () =>
+            {
+                RuleFor(x => x.MediaFile)
+                    .Must(HasExtension(ImageExtensions))
+                    .WithMessage("Media image must be in jpg, jpeg, png, or webp format.")
+                    .Must(f => f!.Length <= MaxThumbnailBytes)
+                    .WithMessage("Image size must not exceed 30MB.");
+            });
         }
+
+        private static Func<IFormFile?, bool> HasExtension(string[] allowed) => file =>
+        file != null && allowed.Contains(Path.GetExtension(file.FileName).ToLowerInvariant());
     }
 }

@@ -7,15 +7,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Interface.Servies;
+using Domain.Enum;
 
 namespace Application.Feature.Content.Commands.UpdateContent
 {
     public class UpdateContentCommandHandler : IRequestHandler<UpdateContentCommand, Result<string>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public UpdateContentCommandHandler(IUnitOfWork unitOfWork)
+        private readonly ICloudinaryService _cloudinaryService;
+        public UpdateContentCommandHandler(IUnitOfWork unitOfWork, ICloudinaryService cloudinaryService)
         {
             _unitOfWork = unitOfWork;
+            _cloudinaryService = cloudinaryService;
         }
 
         public async Task<Result<string>> Handle(UpdateContentCommand request, CancellationToken cancellationToken)
@@ -32,14 +36,28 @@ namespace Application.Feature.Content.Commands.UpdateContent
                     throw new ConflictException("Cannot move content to an inactive category.");
             }
 
+            if (request.ThumbnailFile != null)
+            {
+                content.ThumbnailUrl = await _cloudinaryService.UploadImageAsync(
+                    request.ThumbnailFile, "fanhubplus/thumbnails");
+            }
+
+            if (request.MediaFile != null)
+            {
+                content.MediaUrl = request.Type switch
+                {
+                    ContentType.Image => await _cloudinaryService.UploadVideoAsync(
+                        request.MediaFile, "fanhubplus/media"),
+                    ContentType.Video or ContentType.Audio => await _cloudinaryService.UploadVideoAsync(
+                        request.MediaFile, "fanhubplus/media"),
+                    _ => content.MediaUrl
+                };
+            }
+
             content.Title = request.Title;
             content.Description = request.Description;
             content.Type = request.Type;
-            content.Genre = request.Genre;
-            content.ThumbnailUrl = request.ThumbnailUrl;
-            content.MediaUrl = request.MediaUrl;
             content.ReleaseDate = request.ReleaseDate;
-            content.IsFeatured = request.IsFeatured;
             content.CategoryId = request.CategoryId;
 
             _unitOfWork.ContentRepository.Update(content);

@@ -24,6 +24,14 @@ namespace Infrastructure.Data.Repositories
             c.Title.ToLower() == title.ToLower() && c.CategoryId == categoryId);
         }
 
+        public async Task<IEnumerable<Content>> GetAllActiveContentAsync()
+        {
+            return await _context.Contents
+                .Where(x => x.IsActive == true)
+                .Include(x => x.Category)
+                .ToListAsync();
+        }
+
         public async Task<Content?> GetByIdWithCategoryAsync(int id)
         {
             return await _context.Contents
@@ -40,9 +48,6 @@ namespace Infrastructure.Data.Repositories
 
             if (filters.CategoryId.HasValue)
                 query = query.Where(c => c.CategoryId == filters.CategoryId.Value);
-
-            if (!string.IsNullOrWhiteSpace(filters.Genre))
-                query = query.Where(c => c.Genre.ToLower() == filters.Genre.ToLower());
 
             if (filters.Type.HasValue)
                 query = query.Where(c => c.Type == filters.Type.Value);

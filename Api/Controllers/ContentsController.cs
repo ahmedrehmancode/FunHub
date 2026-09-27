@@ -3,6 +3,7 @@ using Application.Common.Models;
 using Application.Feature.Content.Commands.CreateContent;
 using Application.Feature.Content.Commands.ToggleContentStatus;
 using Application.Feature.Content.Commands.UpdateContent;
+using Application.Feature.Content.Queries.GetAllActive;
 using Application.Feature.Content.Queries.GetContentById;
 using Application.Feature.Content.Queries.GetContents;
 using MediatR;
@@ -37,7 +38,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create(CreateContentCommand command)
         {
             var result = await _mediator.Send(command);
@@ -45,19 +46,25 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update(int id, UpdateContentCommand command)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Update(int id, UpdateContentCommand cmd)
         {
-            if (id != command.Id) return BadRequest();
-            var result = await _mediator.Send(command);
+            cmd.Id = id;
+            var result = await _mediator.Send(cmd);
             return Ok(ApiResponse<object>.SuccessResponse(result.Data));
         }
 
         [HttpPatch("{id}/toggle-status")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ToggleStatus(int id)
         {
             var result = await _mediator.Send(new ToggleContentStatusCommand { ContentId = id});
+            return Ok(ApiResponse<object>.SuccessResponse(result.Data));
+        }
+
+        [HttpGet("GetAllActive")]
+        public async Task<IActionResult> GetAllActiveContent()
+        {
+            var result = await _mediator.Send(new GetAllActiveQuery());
             return Ok(ApiResponse<object>.SuccessResponse(result.Data));
         }
     }

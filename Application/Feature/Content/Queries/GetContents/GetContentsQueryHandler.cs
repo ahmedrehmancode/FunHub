@@ -26,11 +26,9 @@ namespace Application.Feature.Content.Queries.GetContents
                 Id = c.Id,
                 Title = c.Title,
                 Type = c.Type,
-                Genre = c.Genre,
                 ThumbnailUrl = c.ThumbnailUrl,
                 ReleaseDate = c.ReleaseDate,
                 PopularityScore = c.PopularityScore,
-                IsFeatured = c.IsFeatured,
                 CategoryName = c.Category!.Name
             });
 

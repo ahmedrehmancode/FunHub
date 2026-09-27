@@ -15,6 +15,9 @@ namespace Infrastructure.Data
         public IContentRepository ContentRepository { get; }
 
         public IPasswordResetTokenRepository PasswordResetTokenRepository { get; }
+        public IBookmarkRepository BookmarkRepository { get; }
+        public IMerchandiseRepository MerchandiseRepository { get; }
+        public IFeedbackRepository FeedbackRepository { get; }
 
 
         private readonly ApplicationDbContext _context;
@@ -22,11 +25,17 @@ namespace Infrastructure.Data
             ICategoryRepository categoryRepository,
             IContentRepository contentRepository,
             IPasswordResetTokenRepository passwordResetTokenRepository)
+            IBookmarkRepository bookmarkRepository,
+            IMerchandiseRepository merchandiseRepository,
+            IFeedbackRepository feedbackRepository)
         {
             _context = context;
             CategoryRepository = categoryRepository;
             ContentRepository = contentRepository;
             PasswordResetTokenRepository = passwordResetTokenRepository;
+            BookmarkRepository = bookmarkRepository;
+            MerchandiseRepository = merchandiseRepository;
+            FeedbackRepository = feedbackRepository;
         }
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

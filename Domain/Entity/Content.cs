@@ -13,16 +13,15 @@ namespace Domain.Entity
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public Domain.Enum.ContentType Type { get; set; }
-        public string Genre { get; set; } = string.Empty;
-        public string ThumbnailUrl { get; set; } = string.Empty;
-        public string MediaUrl { get; set; } = string.Empty;  
-        public DateTime? ReleaseDate { get; set; }
+        public string? ThumbnailUrl { get; set; } = string.Empty;
+        public string? MediaUrl { get; set; } = string.Empty;  
+        public DateOnly? ReleaseDate { get; set; }
         public int ViewCount { get; set; } = 0;
         public double PopularityScore { get; set; } = 0;
-        public bool IsFeatured { get; set; }
         public bool IsActive { get; set; } = true;
 
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
+        public ICollection<Bookmark> Bookmarks { get; set; } = new List<Bookmark>();
     }
 }
