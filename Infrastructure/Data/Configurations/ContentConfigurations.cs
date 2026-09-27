@@ -13,6 +13,12 @@ namespace Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Content> builder)
         {
+            builder.Property(c => c.SubmittedByUserId)
+                .HasMaxLength(450)
+                .IsRequired(false);
+
+            builder.HasIndex(c => c.SubmittedByUserId);
+
             builder.Property(c => c.Type)
                 .HasConversion<string>()
                 .HasMaxLength(20);

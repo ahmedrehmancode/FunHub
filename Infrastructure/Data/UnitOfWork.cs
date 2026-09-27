@@ -24,7 +24,7 @@ namespace Infrastructure.Data
         public UnitOfWork(ApplicationDbContext context,
             ICategoryRepository categoryRepository,
             IContentRepository contentRepository,
-            IPasswordResetTokenRepository passwordResetTokenRepository)
+            IPasswordResetTokenRepository passwordResetTokenRepository,
             IBookmarkRepository bookmarkRepository,
             IMerchandiseRepository merchandiseRepository,
             IFeedbackRepository feedbackRepository)

@@ -82,5 +82,14 @@ namespace Infrastructure.Data.Repositories
                 PageSize = filters.PageSize
             };
         }
+
+        public async Task<IEnumerable<Content>> GetPendingSubmissionsAsync()
+        {
+            return await _context.Contents
+                .Include(c => c.Category)
+                .Where(c => !c.IsActive && c.SubmittedByUserId != null)
+                .OrderBy(c => c.CreatedAt)
+                .ToListAsync();
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace Application.Interface.Repositories
         Task<PagedResult<Content>> GetFilteredAsync(ContentFilterParams filters);
         Task<bool> ExistsByTitleInCategoryAsync(string title, int categoryId);
         Task<IEnumerable<Content>> GetAllActiveContentAsync();
+        Task<IEnumerable<Content>> GetPendingSubmissionsAsync();
     }
 }

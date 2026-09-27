@@ -20,6 +20,7 @@ namespace Domain.Entity
         public double PopularityScore { get; set; } = 0;
         public bool IsActive { get; set; } = true;
 
+        public string? SubmittedByUserId { get; set; }
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
         public ICollection<Bookmark> Bookmarks { get; set; } = new List<Bookmark>();
