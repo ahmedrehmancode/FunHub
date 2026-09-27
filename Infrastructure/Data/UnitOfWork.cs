@@ -13,16 +13,20 @@ namespace Infrastructure.Data
     {
         public ICategoryRepository CategoryRepository { get; }
         public IContentRepository ContentRepository { get; }
-        
+
+        public IPasswordResetTokenRepository PasswordResetTokenRepository { get; }
+
 
         private readonly ApplicationDbContext _context;
         public UnitOfWork(ApplicationDbContext context,
             ICategoryRepository categoryRepository,
-            IContentRepository contentRepository)
+            IContentRepository contentRepository,
+            IPasswordResetTokenRepository passwordResetTokenRepository)
         {
             _context = context;
             CategoryRepository = categoryRepository;
             ContentRepository = contentRepository;
+            PasswordResetTokenRepository = passwordResetTokenRepository;
         }
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

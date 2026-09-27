@@ -22,5 +22,8 @@ namespace Application.Interface.Servies
 
         // Application/Interface/Servies/IIdentityService.cs
         Task<AuthResult> VerifyEmail(string token, string email);
+
+        Task<(string? UserId, string? Email)> FindUserByEmailAsync(string email);
+        Task<bool> UpdatePasswordAsync(string userId, string newPassword);
     }
 }

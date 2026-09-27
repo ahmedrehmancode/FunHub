@@ -19,6 +19,8 @@ namespace Infrastructure.Data
         public DbSet<Category> Categorys { get; set; }
         public DbSet<Content> Contents { get; set; }
 
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+
 
         // All Configuration Regsiter
         protected override void OnModelCreating(ModelBuilder modelBuilder)

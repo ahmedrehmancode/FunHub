@@ -12,6 +12,8 @@ namespace Application.Interface
         public ICategoryRepository CategoryRepository { get; }
         public IContentRepository ContentRepository { get; }
 
+        public IPasswordResetTokenRepository PasswordResetTokenRepository { get; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

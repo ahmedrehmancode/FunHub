@@ -1,5 +1,4 @@
 ﻿using Application.Common;
-using Application.Common;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +17,6 @@ namespace Application
             services.Configure<EmailConfig>(configuration.GetSection("EmailConfig"));
             services.Configure<AppBaseUrl>(configuration.GetSection("AppSettings"));
             
-
             // MediatR ko is all assembly handlers register
             services.AddMediatR(cfg =>
                 cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
