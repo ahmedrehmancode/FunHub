@@ -1,5 +1,7 @@
 ﻿using Application.Common.Models;
 using Application.Interface.Servies;
+using AutoMapper;
+using Domain.Entity;
 using Domain.Exceptions;
 using Infrastructure.Data;
 using Infrastructure.Identity;
@@ -18,13 +20,15 @@ namespace Infrastructure.Service
         private readonly IEmailService _emailService;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<IdentityService> _logger;
-        public IdentityService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration iconfigruation, IEmailService emailService, ILogger<IdentityService> logger)
+        private readonly IMapper _mapper;
+        public IdentityService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration iconfigruation, IEmailService emailService, ILogger<IdentityService> logger, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
             _configruation = iconfigruation;
             _emailService = emailService;
             _logger = logger;
+            _mapper = mapper;
         }
         // LoginAsync method to authenticate a user based on email/username and password
         public async Task<AuthResult> LoginAsync(string emailOrUsername, string password)
@@ -107,7 +111,7 @@ namespace Infrastructure.Service
             await _userManager.AddToRoleAsync(user, role);
 
 
-            
+
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             _logger.LogInformation("IdentityService : generated email confirmation token for {Email}", user.Email);
             var baseUrl = _configruation["AppSettings:BaseUrl"];
@@ -141,16 +145,16 @@ namespace Infrastructure.Service
             }
             catch (AppException)
             {
-            
-                
+
+
                 return new AuthResult
                 {
                     Succeeded = true,
                     Errors = new() { "Account created but verification email could not be sent." }
                 };
             }
-           
-            
+
+
         }
 
         public async Task<AuthResult> VerifyEmail(string token, string email)
@@ -197,25 +201,67 @@ namespace Infrastructure.Service
             };
         }
         // FindUserByEmailAsync method to retrieve a user's ID and email based on their email address
-        public async Task<(string? UserId, string? Email)> FindUserByEmailAsync(string email)
+        public async Task<User> FindUserByEmailAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            return user == null ? (null, null) : (user.Id, user.Email);
+            if (user == null)
+            {
+                throw new AppException("User not found");
+            }
+            return _mapper.Map<User>(user); 
+                
+            }
+
+        
+
+        // FindUserByIdAsync method to retrieve a user based on their ID
+
+        public async Task<User> FindUserByIdAsync(string userId)
+        {
+            var CurrentUser = await _userManager.FindByIdAsync(userId);
+            if (CurrentUser == null)
+            {
+                throw new AppException("User not found");
+            }
+            User user = _mapper.Map<User>(CurrentUser);
+            return user;
         }
+
+
         // UpdatePasswordAsync method to update a user's password
-        public async Task<bool> UpdatePasswordAsync(string userId, string newPassword)
+        public async Task<AuthResult> UpdatePasswordAsync(string userId, string newPassword)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return false;
+            if (user == null)
+                return new AuthResult { Succeeded = false, Errors = new List<string> { "User not found." } };
 
             var hasher = new PasswordHasher<ApplicationUser>();
             user.PasswordHash = hasher.HashPassword(user, newPassword);
 
             var result = await _userManager.UpdateAsync(user);
-            return result.Succeeded;
+            return result.Succeeded ? new AuthResult { Succeeded = true } : new AuthResult { Succeeded = false, Errors = new List<string> { "Failed to update password." } };
         }
+        // updateProfileAsync method to update a user's profile information
+        public async Task<AuthResult> UpdateProfileAsync(User data)
+        {
+            var user = await _userManager.FindByIdAsync(data.Id);
+            if (user == null)
+                return new AuthResult { Succeeded = false, Errors = new List<string> { "User not found." } };
 
+            if (!string.IsNullOrWhiteSpace(data.FullName))
+                user.FullName = data.FullName;
 
+            if (!string.IsNullOrWhiteSpace(data.Bio))
+                user.Bio = data.Bio;
 
+            if (!string.IsNullOrWhiteSpace(data.AvatarUrl))
+                user.AvatarUrl = data.AvatarUrl;
+
+            if (!string.IsNullOrWhiteSpace(data.CoverPhotoUrl))
+                user.CoverPhotoUrl = data.CoverPhotoUrl;
+
+            var result = await _userManager.UpdateAsync(user);
+            return result.Succeeded ? new AuthResult { Succeeded = true } : new AuthResult { Succeeded = false, Errors = new List<string> { "Failed to update profile." } };
+        }
     }
 }

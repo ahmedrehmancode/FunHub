@@ -3,6 +3,8 @@ using Application.Interface.Repositories;
 using Application.Interface.Servies;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
+using Infrastructure.Mapper;
+using Infrastructure.Persistence.Repositories;
 using Infrastructure.Repositoires;
 using Infrastructure.Service;
 using Microsoft.AspNetCore.Identity;
@@ -39,17 +41,24 @@ namespace Infrastructure
             // Configure
             services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
 
+            //Mapper Register
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddMaps(typeof(UserProfile).Assembly);
+            });
+
             // Repositries
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IContentRepository, ContentRepository>();
             services.AddScoped<IBookmarkRepository, BookmarkRepository>();
             services.AddScoped<IMerchandiseRepository, MerchandiseRepository>();
             services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             //
 
             services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
-          
+
 
 
             return services;

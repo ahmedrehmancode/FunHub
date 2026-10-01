@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 //using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;       
 using System.Reflection;
+using Application.Common.Mappings;
 
 namespace Application
 {
@@ -20,6 +21,11 @@ namespace Application
             // MediatR ko is all assembly handlers register
             services.AddMediatR(cfg =>
                 cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfile<UserProfile>();
+            });
 
             // FluentValidation validators is assembly register
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

@@ -40,35 +40,35 @@ namespace Application.Feature.Auth.Commands.ForgotPassword
         public async Task<Unit> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation(" ForgotPasswordCommadn: Handling ForgotPasswordCommand for email: {Email}", request.Email);
-            var (userId, email) = await _identityService.FindUserByEmailAsync(request.Email);
+            var user = await _identityService.FindUserByEmailAsync(request.Email);
 
             // User enumeration se bachne ke liye — na mile to bhi silently return karo
-            if (userId == null)
+            if (user?.Id == null)
                 return Unit.Value;
             
             _logger.LogInformation(" ForgotPasswordCommand: User found for email: {Email}", request.Email);
 
             var rawToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
-            _logger.LogInformation(" ForgotPasswordCommand: Generated raw token for userId: {UserId}", userId);
+            _logger.LogInformation(" ForgotPasswordCommand: Generated raw token for userId: {UserId}", user.Id);
             var tokenHash = Convert.ToBase64String(
                 SHA256.HashData(Encoding.UTF8.GetBytes(rawToken)));
 
             var resetToken = new PasswordResetToken
             {
-                UserId = userId,
+                UserId = user.Id,
                 TokenHash = tokenHash,
                 ExpiresAt = DateTime.UtcNow.AddMinutes(30),
                 IsUsed = false
             };
-            _logger.LogInformation(" ForgotPasswordCommand: Created PasswordResetToken entity for userId: {UserId}", userId);
+            _logger.LogInformation(" ForgotPasswordCommand: Created PasswordResetToken entity for userId: {UserId}", user.Id);
             await _unitOfWork.PasswordResetTokenRepository.AddAsync(resetToken);
             await _unitOfWork.SaveChangesAsync();
-            _logger.LogInformation(" ForgotPasswordCommand: Saved PasswordResetToken to database for userId: {UserId}", userId);
+            _logger.LogInformation(" ForgotPasswordCommand: Saved PasswordResetToken to database for userId: {UserId}", user.Id);
 
             var baseUrl = _configruation["AppSettings:BaseUrl"];
-            var resetLink = $"{baseUrl}/api/Auth/reset-password?email={Uri.EscapeDataString(email!)}&token={Uri.EscapeDataString(rawToken)}";
-            _logger.LogInformation(" ForgotPasswordCommand: Generated reset link for userId: {UserId}", userId);
-            await _emailService.SendPasswordResetEmailAsync(email!, resetLink);
+            var resetLink = $"{baseUrl}/api/Auth/reset-password?email={Uri.EscapeDataString(user.Email!)}&token={Uri.EscapeDataString(rawToken)}";
+            _logger.LogInformation(" ForgotPasswordCommand: Generated reset link for userId: {UserId}", user.Id);
+            await _emailService.SendPasswordResetEmailAsync(user.Email!, resetLink);
 
 
             return Unit.Value;

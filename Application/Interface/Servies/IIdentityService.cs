@@ -1,4 +1,5 @@
 ﻿using Application.Common.Models;
+using Domain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,11 @@ namespace Application.Interface.Servies
         // Application/Interface/Servies/IIdentityService.cs
         Task<AuthResult> VerifyEmail(string token, string email);
 
-        Task<(string? UserId, string? Email)> FindUserByEmailAsync(string email);
-        Task<bool> UpdatePasswordAsync(string userId, string newPassword);
+        Task<User> FindUserByEmailAsync(string email);
+        Task<AuthResult> UpdatePasswordAsync(string userId, string newPassword);
+
+        Task<User> FindUserByIdAsync(string userId);
+
+        Task<AuthResult> UpdateProfileAsync(User data);
     }
 }

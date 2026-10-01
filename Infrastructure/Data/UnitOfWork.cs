@@ -19,6 +19,8 @@ namespace Infrastructure.Data
         public IMerchandiseRepository MerchandiseRepository { get; }
         public IFeedbackRepository FeedbackRepository { get; }
 
+        public IUserRepository UserRepository { get; }
+
 
         private readonly ApplicationDbContext _context;
         public UnitOfWork(ApplicationDbContext context,
@@ -27,7 +29,8 @@ namespace Infrastructure.Data
             IPasswordResetTokenRepository passwordResetTokenRepository,
             IBookmarkRepository bookmarkRepository,
             IMerchandiseRepository merchandiseRepository,
-            IFeedbackRepository feedbackRepository)
+            IFeedbackRepository feedbackRepository,
+            IUserRepository userRepository)
         {
             _context = context;
             CategoryRepository = categoryRepository;
@@ -36,6 +39,7 @@ namespace Infrastructure.Data
             BookmarkRepository = bookmarkRepository;
             MerchandiseRepository = merchandiseRepository;
             FeedbackRepository = feedbackRepository;
+            UserRepository = userRepository;
         }
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

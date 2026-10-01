@@ -10,5 +10,7 @@ namespace Infrastructure.Identity
         public string? AvatarUrl { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true;
+        public string? Bio { get; set; }
+        public string? CoverPhotoUrl { get; set; }
     }
 }
